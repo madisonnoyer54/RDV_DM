@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -Wextra -pedantic -std=c++11 -O3 -fopenmp -rdynamic CMakeFiles/tinykaboom.dir/tinykaboom.cpp.o -o tinykaboom 

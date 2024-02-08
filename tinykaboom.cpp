@@ -7,8 +7,8 @@
 #include <vector>
 #include "geometry.h"
 
-const float sphere_radius   = 1.5; // all the explosion fits in a sphere with this radius. The center lies in the origin.
-const float noise_amplitude = 1.0; // amount of noise applied to the sphere (towards the center)
+const float sphere_radius   = 1.2; // all the explosion fits in a sphere with this radius. The center lies in the origin.
+const float noise_amplitude = 0.2; // amount of noise applied to the sphere (towards the center)
 
 template <typename T> inline T lerp(const T &v0, const T &v1, float t) {
     return v0 + (v1-v0)*std::max(0.f, std::min(1.f, t));
@@ -47,11 +47,12 @@ float fractal_brownian_motion(const Vec3f &x) { // this is a bad noise function 
 }
 
 Vec3f palette_fire(const float d) { // simple linear gradent yellow-orange-red-darkgray-gray. d is supposed to vary from 0 to 1
-    const Vec3f   yellow(1.7, 1.3, 1.0); // note that the color is "hot", i.e. has components >1
-    const Vec3f   orange(1.0, 0.6, 0.0);
-    const Vec3f      red(1.0, 0.0, 0.0);
-    const Vec3f darkgray(0.2, 0.2, 0.2);
-    const Vec3f     gray(0.4, 0.4, 0.4);
+    const Vec3f   yellow(1.0, 1.0, 1.0); // note that the color is "hot", i.e. has components >1
+    const Vec3f   orange(0.5, 0.7, 0.7);
+    const Vec3f      red(1.0, 1.0, 1.0);
+    const Vec3f darkgray(1.2, 1.2, 1.2);
+    const Vec3f     gray(1.0, 1.0, 1.0);
+    
 
     float x = std::max(0.f, std::min(1.f, d));
     if (x<.25f)
