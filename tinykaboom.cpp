@@ -7,7 +7,12 @@
 #include <vector>
 #include "geometry.h"
 
-const float sphere_radius   = 0.7; // changer la taille
+const float sphere1_radius   = 0.3; // Rayon pour la petite boule
+const float sphere2_radius  = 0.5; // Rayon pour la boule moyenne
+const float sphere3_radius   = 0.7; // Rayon pour la grande boule
+
+const float sphere_radius   = 0.7;
+
 const float noise_amplitude = 0.15; // texture
 
 template <typename T> inline T lerp(const T &v0, const T &v1, float t) {
@@ -88,53 +93,54 @@ Vec3f distance_field_normal(const Vec3f &pos) { // simple finite differences, ve
 }
 
 int main() {
-    const int   width    = 640;     // image width
-    const int   height   = 480;     // image height
-    const float fov      = M_PI/3.; // field of view angle
-    std::vector<Vec3f> framebuffer(width*height);
+	const int   width    = 640;     // image width
+	const int   height   = 480;     // image height
+	const float fov      = M_PI/3.; // field of view angle
+	std::vector<Vec3f> framebuffer(width*height);
 
-#pragma omp parallel for
-    for (size_t j = 0; j<height; j++) { // actual rendering loop
-        for (size_t i = 0; i<width; i++) {
-            float dir_x =  (i + 0.5) -  width/2.;
-            float dir_y = -(j + 0.5) + height/2.;    // this flips the image at the same time
-            float dir_z = -height/(2.*tan(fov/2.));
-            Vec3f hit;
-            
-            
-        // Boule 1
-	if (sphere_trace(Vec3f(0, -0.8, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit)) { 
-	    float noise_level = (sphere_radius-hit.norm())/noise_amplitude;
-	    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-	    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
-	    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
-	    
-	// Boule 2  
-	} else if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit)) { 
-	    float noise_level = (sphere_radius-0.3-hit.norm())/noise_amplitude;
-	    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-	    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
-	    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
-	// Boule 3
-	} else if (sphere_trace(Vec3f(0, 0.8, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit)) { 
-	    float noise_level = (sphere_radius-0.4-hit.norm())/noise_amplitude;
-	    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-	    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
-	    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
-	} else {
-	    framebuffer[i+j*width] = Vec3f(0.2, 0.7, 0.8); // Couleur de fond
+	#pragma omp parallel for
+	for (size_t j = 0; j<height; j++) { // actual rendering loop
+		for (size_t i = 0; i<width; i++) {
+		    float dir_x =  (i + 0.5) -  width/2.;
+		    float dir_y = -(j + 0.5) + height/2.;    // this flips the image at the same time
+		    float dir_z = -height/(2.*tan(fov/2.));
+		    Vec3f hit;
+		    
+		    
+			// Boule 1
+			if (sphere_trace(Vec3f(0, -0.8, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit)) { 
+			    float noise_level = (sphere1_radius-hit.norm())/noise_amplitude;
+			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
+			    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
+			    
+			// Boule 2  
+			} else if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit)) { 
+			    float noise_level = (sphere2_radius-hit.norm())/noise_amplitude;
+			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
+			    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
+			    
+			// Boule 3
+			} else if (sphere_trace(Vec3f(0, 0.8, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit)) { 
+			    float noise_level = (sphere3_radius-hit.norm())/noise_amplitude;
+			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
+			    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
+			} else {
+			    framebuffer[i+j*width] = Vec3f(0.2, 0.7, 0.8); // Couleur de fond
+			}
+		}
 	}
-        }
-    }
 
-    std::ofstream ofs("./out.ppm", std::ios::binary); // save the framebuffer to file
-    ofs << "P6\n" << width << " " << height << "\n255\n";
-    for (size_t i = 0; i < height*width; ++i) {
-        for (size_t j = 0; j<3; j++) {
-            ofs << (char)(std::max(0, std::min(255, static_cast<int>(255*framebuffer[i][j]))));
-        }
-    }
-    ofs.close();
+	std::ofstream ofs("./out.ppm", std::ios::binary); // save the framebuffer to file
+	ofs << "P6\n" << width << " " << height << "\n255\n";
+	for (size_t i = 0; i < height*width; ++i) {
+		for (size_t j = 0; j<3; j++) {
+		    ofs << (char)(std::max(0, std::min(255, static_cast<int>(255*framebuffer[i][j]))));
+		}
+	}
+	ofs.close();
 
     return 0;
 }
