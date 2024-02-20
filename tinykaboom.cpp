@@ -5,15 +5,18 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "geometry.h"
+
 
 const float sphere1_radius   = 0.5; // Rayon pour la petite boule
 const float sphere2_radius  = 0.6; // Rayon pour la boule moyenne
 const float sphere3_radius   = 0.7; // Rayon pour la grande boule
 
+const float bouton = 0.08; // rayon pour les boutons
 //const float sphere_radius   = 0.3;
 
 const float noise_amplitude = 0.15; // texture
+
+
 
 template <typename T> inline T lerp(const T &v0, const T &v1, float t) {
     return v0 + (v1-v0)*std::max(0.f, std::min(1.f, t));
@@ -54,8 +57,6 @@ float fractal_brownian_motion(const Vec3f &x) { // this is a bad noise function 
 Vec3f palette_fire(const float d) { // simple linear gradent yellow-orange-red-darkgray-gray. d is supposed to vary from 0 to 1
     const Vec3f   blanc(1.0, 1.0, 1.0); // note that the color is "hot", i.e. has components >1
    
-    
-
     float x = std::max(0.f, std::min(1.f, d));
     if (x<.25f)
         return lerp(blanc, blanc, x*4.f);
@@ -64,6 +65,20 @@ Vec3f palette_fire(const float d) { // simple linear gradent yellow-orange-red-d
     else if (x<.75f)
         return lerp(blanc, blanc, x*4.f-2.f);
     return lerp(blanc, blanc, x*4.f-3.f);
+}
+
+
+Vec3f palette_bouton(const float d) { // simple linear gradent yellow-orange-red-darkgray-gray. d is supposed to vary from 0 to 1
+    const Vec3f   noir(0.0, 0.0, 0.0); // note that the color is "hot", i.e. has components >1
+   
+    float x = std::max(0.f, std::min(1.f, d));
+    if (x<.25f)
+        return lerp(noir, noir, x*4.f);
+    else if (x<.5f)
+        return lerp(noir, noir, x*4.f-1.f);
+    else if (x<.75f)
+        return lerp(noir, noir, x*4.f-2.f);
+    return lerp(noir, noir, x*4.f-3.f);
 }
 
 float signed_distance(const Vec3f &p, float sphere_radius) { // this function defines the implicit surface we render
@@ -97,6 +112,7 @@ int main() {
 	const int   height   = 480;     // image height
 	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
+    unsigned char *pixmap = stbi_load("../envmap.jpg", &envmap_width, &envmap_height, &n, 0);
 
 	#pragma omp parallel for
 	for (size_t j = 0; j<height; j++) { // actual rendering loop
@@ -106,6 +122,13 @@ int main() {
 		    float dir_z = -height/(2.*tan(fov/2.));
 		    Vec3f hit;
 		    
+            // Bouton 
+            if (sphere_trace(Vec3f(0, -0.7, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,bouton)) { 
+			    float noise_level = (bouton-hit.norm())/noise_amplitude;
+			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, bouton));
+			    framebuffer[i+j*width] = palette_bouton((-.2 + noise_level)*2)*light_intensity;
+            }else
 		    
 			// Boule 1
 			if (sphere_trace(Vec3f(0, -0.7, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,sphere1_radius)) { 
@@ -130,6 +153,8 @@ int main() {
 			} else {
 			    framebuffer[i+j*width] = Vec3f(0.2, 0.7, 0.8); // Couleur de fond
 			}
+
+            
 		}
 	}
 
