@@ -6,6 +6,8 @@
 #include <fstream>
 #include <vector>
 
+#include "geometry.h"
+
 
 const float sphere1_radius   = 0.5; // Rayon pour la petite boule
 const float sphere2_radius  = 0.6; // Rayon pour la boule moyenne
