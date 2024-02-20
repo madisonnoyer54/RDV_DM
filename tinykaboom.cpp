@@ -114,7 +114,6 @@ int main() {
 	const int   height   = 480;     // image height
 	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
-    unsigned char *pixmap = stbi_load("../envmap.jpg", &envmap_width, &envmap_height, &n, 0);
 
 	#pragma omp parallel for
 	for (size_t j = 0; j<height; j++) { // actual rendering loop
