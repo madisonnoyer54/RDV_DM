@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cmath>
 
 #include "geometry.h"
 
@@ -27,6 +28,10 @@ template <typename T> inline T lerp(const T &v0, const T &v1, float t) {
 float hash(const float n) {
     float x = sin(n)*43758.5453f;
     return x-floor(x);
+}
+
+float dot(const Vec3f& a, const Vec3f& b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 float noise(const Vec3f &x) {
@@ -83,29 +88,66 @@ Vec3f palette_bouton(const float d) { // simple linear gradent yellow-orange-red
     return lerp(noir, noir, x*4.f-3.f);
 }
 
-float signed_distance(const Vec3f &p, float sphere_radius) { // this function defines the implicit surface we render
+float signed_distance(const Vec3f &p, const Vec3f &sphere_center, float sphere_radius) { // this function defines the implicit surface we render
     float displacement = -fractal_brownian_motion(p*3.4)*noise_amplitude;
-    return p.norm() - (sphere_radius + displacement);
+    return (p - sphere_center).norm() - (sphere_radius + displacement);
 }
 
-bool sphere_trace(const Vec3f &orig, const Vec3f &dir, Vec3f &pos, float sphere_radius) {         // Notice the early discard; in fact I know that the noise() function produces non-negative values,
-    if (orig*orig - pow(orig*dir, 2) > pow(sphere_radius, 2)) return false;  // thus all the explosion fits in the sphere. Thus this early discard is a conservative check.
-                                                                             // It is not necessary, just a small speed-up
+bool sphere_trace(const Vec3f &orig, const Vec3f &dir, Vec3f &pos, const Vec3f &sphere_center, float sphere_radius) {
+    if ((orig - sphere_center).norm() - std::pow((orig - sphere_center) * dir, 2) > std::pow(sphere_radius, 2))
+        return false;
+
     pos = orig;
-    for (size_t i=0; i<128; i++) {
-        float d = signed_distance(pos, sphere_radius);
+
+    for (size_t i = 0; i < 64; i++) {
+        float d = signed_distance(pos, sphere_center, sphere_radius);
+        if (d < 0)
+            return true;
+        pos = pos + dir * std::max(d * 0.1f, 0.01f);
+    }
+
+    return false;
+}
+
+float signed_distance_cylindre(const Vec3f &p, const Vec3f &a, const Vec3f &b, float radius) { // this function defines the implicit surface we render
+    Vec3f ab = b-a;
+    float t = dot(ab, p-a) / dot(ab, ab);
+    /*if(t>1) t=1;
+    if(t<0) t=0;*/
+    Vec3f c = a + ab*t;    
+    float x = (p-c).norm() - radius;
+    float y = (abs(t-0.5f)-0.5f)*ab.norm();
+    float e = Vec3f(std::max(x, 0.f), std::max(y, 0.f), 0.f).norm();
+    float i = std::min(std::max(x, y), 0.0f);
+    return e + i;
+}
+
+bool cylindre_trace(const Vec3f &orig, const Vec3f &dir, Vec3f &pos, const Vec3f &a, const Vec3f &b, float radius) {         // Notice the early discard; in fact I know that the noise() function produces non-negative values,
+    pos = orig;
+    for (size_t i = 0; i < 64; i++) {
+        float d = signed_distance_cylindre(pos, a, b, radius);
         if (d < 0) return true;
-        pos = pos + dir*std::max(d*0.1f, .01f); // note that the step depends on the current distance, if we are far from the surface, we can do big steps
+        pos = pos + dir * std::max(d * 0.1f, 0.01f);
     }
     return false;
 }
 
-Vec3f distance_field_normal(const Vec3f &pos, float sphere_radius) { // simple finite differences, very sensitive to the choice of the eps constant
+
+Vec3f distance_field_normal(const Vec3f &pos, const Vec3f &sphere_center, float sphere_radius) { // simple finite differences, very sensitive to the choice of the eps constant
     const float eps = 0.1;
-    float d = signed_distance(pos, sphere_radius);
-    float nx = signed_distance(pos + Vec3f(eps, 0, 0), sphere_radius) - d;
-    float ny = signed_distance(pos + Vec3f(0, eps, 0), sphere_radius) - d;
-    float nz = signed_distance(pos + Vec3f(0, 0, eps), sphere_radius) - d;
+    float d = signed_distance(pos, sphere_center, sphere_radius);
+    float nx = signed_distance(pos + Vec3f(eps, 0, 0), sphere_center, sphere_radius) - d;
+    float ny = signed_distance(pos + Vec3f(0, eps, 0), sphere_center, sphere_radius) - d;
+    float nz = signed_distance(pos + Vec3f(0, 0, eps), sphere_center, sphere_radius) - d;
+    return Vec3f(nx, ny, nz).normalize();
+}
+
+Vec3f distance_field_normal_cylindre(const Vec3f &pos, const Vec3f &a, const Vec3f &b, float radius) { // simple finite differences, very sensitive to the choice of the eps constant
+    const float eps = 0.1;
+    float d = signed_distance_cylindre(pos, a, b, radius);
+    float nx = signed_distance_cylindre(pos + Vec3f(eps, 0, 0), a, b, radius) - d;
+    float ny = signed_distance_cylindre(pos + Vec3f(0, eps, 0), a, b, radius) - d;
+    float nz = signed_distance_cylindre(pos + Vec3f(0, 0, eps), a, b, radius) - d;
     return Vec3f(nx, ny, nz).normalize();
 }
 
@@ -122,40 +164,48 @@ int main() {
 		    float dir_y = -(j + 0.5) + height/2.;    // this flips the image at the same time
 		    float dir_z = -height/(2.*tan(fov/2.));
 		    Vec3f hit;
-		    
+
             // Bouton 
-            if (sphere_trace(Vec3f(0, -0.7, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,bouton)) { 
-			    float noise_level = (bouton-hit.norm())/noise_amplitude;
-			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, bouton));
-			    framebuffer[i+j*width] = palette_bouton((-.2 + noise_level)*2)*light_intensity;
+            if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,  Vec3f(0, 0, -0.5), 0.08)) { 
+                float noise_level = (bouton-hit.norm())/noise_amplitude;
+                Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+                float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit,  Vec3f(0, 0, -0.5), 0.08));
+                framebuffer[i+j*width] = palette_bouton((-.2 + noise_level)*2)*light_intensity;
             }else
 		    
 			// Boule 1
-			if (sphere_trace(Vec3f(0, -0.7, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,sphere1_radius)) { 
+			if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit, Vec3f(0, 0.7, 0), sphere1_radius)) { 
 			    float noise_level = (sphere1_radius-hit.norm())/noise_amplitude;
 			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, sphere1_radius));
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit,  Vec3f(0, 0.7, 0), sphere1_radius));
 			    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
 			    
 			// Boule 2  
-			} else if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,sphere2_radius)) { 
+			} else if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,  Vec3f(0, 0, 0), sphere2_radius)) { 
 			    float noise_level = (sphere2_radius-hit.norm())/noise_amplitude;
 			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, sphere2_radius));
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, Vec3f(0, 0, 0), sphere2_radius));
 			    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
 			    
 			// Boule 3
-			} else if (sphere_trace(Vec3f(0, 0.7, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit,sphere3_radius)) { 
+			} else if (sphere_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit, Vec3f(0, -0.7, 0), sphere3_radius)) { 
 			    float noise_level = (sphere3_radius-hit.norm())/noise_amplitude;
 			    Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
-			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, sphere3_radius));
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit, Vec3f(0, -0.7, 0), sphere3_radius));
 			    framebuffer[i+j*width] = palette_fire((-.2 + noise_level)*2)*light_intensity;
-			} else {
+ 
+            } else if(cylindre_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit, Vec3f(0, 0, 0), Vec3f(-1.2, 0.45f, 0), 0.03)) {
+                Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal_cylindre(hit, Vec3f(0, 0, 0), Vec3f(-1.2, 0.45f, 0), 0.03));
+                framebuffer[i+j*width] = Vec3f(0.5, 0.4, 0)*light_intensity;
+
+            } else if(cylindre_trace(Vec3f(0, 0, 3), Vec3f(dir_x, dir_y, dir_z).normalize(), hit, Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03)) {
+                Vec3f light_dir = (Vec3f(10, 10, 10) - hit).normalize();
+			    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal_cylindre(hit, Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03));
+                framebuffer[i+j*width] = Vec3f(0.5, 0.4, 0)*light_intensity;
+            }else {
 			    framebuffer[i+j*width] = Vec3f(0.2, 0.7, 0.8); // Couleur de fond
 			}
-
-            
 		}
 	}
 
