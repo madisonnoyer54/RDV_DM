@@ -26,7 +26,6 @@ const float sphere3_radius   = 0.7; // Rayon pour la grande boule
 
 
 void render(Model** models) {
-    
 	const int   width    = 960;     // image width
 	const int   height   = 720;     // image height
 	const float fov      = M_PI/3.; // field of view angle
@@ -94,9 +93,9 @@ int main() {
     stbi_image_free(pixmap);
 
     //Initialisation des objets
-    Sphere boule1 = Sphere(Vec3f(0, 0.7, 0), sphere1_radius);
+    Sphere boule1 = Sphere(Vec3f(0, 0.8, 0), sphere1_radius);
     Sphere boule2 = Sphere(Vec3f(0, 0, 0), sphere2_radius);
-    Sphere boule3 = Sphere(Vec3f(0, -0.7, 0), sphere3_radius);
+    Sphere boule3 = Sphere(Vec3f(0, -0.8, 0), sphere3_radius);
 
     RoundedCone carrote = RoundedCone(Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.8), 0.04, 0.1, Vec3f(0.8,0.6,0));
 
