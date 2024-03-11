@@ -159,7 +159,7 @@ Vec3f distance_field_normal(const Vec3f &pos, const Vec3f &sphere_center, float 
 }
 
 Vec3f distance_field_normal_cylindre(const Vec3f &pos, const Vec3f &a, const Vec3f &b, float radius) { // simple finite differences, very sensitive to the choice of the eps constant
-    const float eps = 0.1;
+    const float eps = 0.001;
     float d = signed_distance_cylindre(pos, a, b, radius);
     float nx = signed_distance_cylindre(pos + Vec3f(eps, 0, 0), a, b, radius) - d;
     float ny = signed_distance_cylindre(pos + Vec3f(0, eps, 0), a, b, radius) - d;
@@ -168,7 +168,7 @@ Vec3f distance_field_normal_cylindre(const Vec3f &pos, const Vec3f &a, const Vec
 }
 
 Vec3f distance_field_normal_cone(const Vec3f &pos, const Vec3f &b, const Vec3f &a, float r1, float r2) { // simple finite differences, very sensitive to the choice of the eps constant
-    const float eps = 0.1;
+    const float eps = 0.001;
     float d = sd_rounded_cone(pos, b, a, r1, r2);
     float nx = sd_rounded_cone(pos + Vec3f(eps, 0, 0), b, a, r1, r2) - d;
     float ny = sd_rounded_cone(pos + Vec3f(0, eps, 0), b, a, r1, r2) - d;
@@ -184,7 +184,7 @@ float signed_distance_set_min(float provided, float &min) {
 int main() {
 	const int   width    = 640;     // image width
 	const int   height   = 480;     // image height
-	const float fov      = M_PI/2.; // field of view angle
+	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
 
 	#pragma omp parallel for
@@ -241,9 +241,9 @@ int main() {
                 }
 
                 //carotte
-                else if(signed_distance_set_min(sd_rounded_cone(pos, Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.9), 0.03, 0.09), minDist) < 0) {
+                else if(signed_distance_set_min(sd_rounded_cone(pos, Vec3f(0, 0.7, 0.4), Vec3f(0, 0.66, 0.8), 0.04, 0.1), minDist) < 0) {
                     Vec3f light_dir = (Vec3f(10, 10, 10) - pos).normalize();
-                    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal_cone(pos, Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 1), 0.05, 0.1));
+                    float light_intensity  = std::max(0.4f, light_dir*distance_field_normal_cone(pos, Vec3f(0, 0.7, 0.4), Vec3f(0, 0.66, 0.8), 0.04, 0.1));
                     framebuffer[i+j*width] = Vec3f(0.8,0.6,0) * light_intensity;
                 }
                 if(minDist < 0) break;
