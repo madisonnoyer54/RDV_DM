@@ -97,7 +97,8 @@ int main() {
     Sphere boule2 = Sphere(Vec3f(0, 0, 0), sphere2_radius);
     Sphere boule3 = Sphere(Vec3f(0, -0.8, 0), sphere3_radius);
 
-    RoundedCone carrote = RoundedCone(Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.8), 0.04, 0.1, Vec3f(0.8,0.6,0));
+    RoundedCone carrote = RoundedCone(Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.8), 0.01, 0.05, Vec3f(255.0 / 255.0, 165.0 / 255.0, 0.0 / 255.0));
+
 
     Cylinder bras1 = Cylinder(Vec3f(0, 0, 0), Vec3f(-1.2, 0.45f, 0), 0.03, Vec3f(0.5, 0.4, 0));
     Cylinder bras2 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
