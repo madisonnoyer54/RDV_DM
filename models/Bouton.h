@@ -8,12 +8,12 @@ class Bouton : public Model{
 
     public:
         Vec3f center;
-        float radius;
-        float noise_amplitude = 0.15;
+        float radius=0.02;
+        float noise_amplitude = 0;
 
-        Bouton(Vec3f _center, float _radius){
+        Bouton(Vec3f _center){
             center = _center;
-            radius = _radius;
+    
         }
 
         float signed_distance(const Vec3f &p){
@@ -31,25 +31,12 @@ class Bouton : public Model{
         }
 
         Vec3f getColor(const Vec3f &hit, const Vec3f &lightPos) {
-            float noise_level = (radius-hit.norm())/noise_amplitude;
             Vec3f light_dir = (lightPos - hit).normalize();
             float light_intensity  = std::max(0.4f, light_dir*distance_field_normal(hit));
-            return palette_fire((-.2 + noise_level)*2)*light_intensity;
+            return Vec3f(0,0,0)*light_intensity;
         }
 
-    private: 
-        Vec3f palette_fire(const float d) { // simple linear gradent yellow-orange-red-darkgray-gray. d is supposed to vary from 0 to 1
-            const Vec3f   blanc(1.0, 1.0, 1.0); // note that the color is "hot", i.e. has components >1
-        
-            float x = std::max(0.f, std::min(1.f, d));
-            if (x<.25f)
-                return lerp(blanc, blanc, x*4.f);
-            else if (x<.5f)
-                return lerp(blanc, blanc, x*4.f-1.f);
-            else if (x<.75f)
-                return lerp(blanc, blanc, x*4.f-2.f);
-            return lerp(blanc, blanc, x*4.f-3.f);
-        }
+   
         
 };
 
