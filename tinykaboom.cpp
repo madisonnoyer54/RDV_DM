@@ -48,7 +48,7 @@ void render(Model** models) {
             float minDist = std::numeric_limits<float>::max();
 
             //Parcours du rayon
-            for (size_t k = 0; k < 100; k++) {
+            for (size_t k = 0; k < 64; k++) {
 
                 
                 //On teste la distance avec chaque modèle de la scène
@@ -63,9 +63,21 @@ void render(Model** models) {
                 if(minDist < 0) break;
 
                 //Avancement de la position
-                pos = pos + Vec3f(dir_x, dir_y, dir_z).normalize() * std::max(minDist * 0.1f, 0.01f);
+                pos = pos + Vec3f(dir_x, dir_y, dir_z).normalize() * std::max(minDist, 0.01f);
             }
-            if(minDist >= 0) framebuffer[i+j*width] = Vec3f(0.2, 1.7, 0.8); // Couleur de fond
+
+            if(minDist >= 0){
+                Vec3f projeted_w = Vec3f(-dir_x, dir_z, 0).normalize();
+                float angle_w = atan2(projeted_w.x, projeted_w.y);
+                if (angle_w < 0)
+                    angle_w = 2 * M_PI + angle_w;
+                
+                Vec3f projeted_h = Vec3f(abs(dir_z), dir_y, 0).normalize();
+                float angle_h = atan2(projeted_h.x, projeted_h.y);
+                    angle_h = M_PI/2 + angle_h;
+
+                framebuffer[i+j*width] = envmap[((int)(angle_h/(2 * M_PI)*envmap_height)) * envmap_width + ((int)(angle_w/(2 * M_PI)*envmap_width))]; // Couleur de fond
+            }
 		}
 	}
 
