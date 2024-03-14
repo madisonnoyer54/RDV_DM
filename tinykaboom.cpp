@@ -29,8 +29,8 @@ Vec3f couleur_noir = Vec3f(0, 0, 0);
 
 
 void render(Model** models) {
-	const int   width    = 960;     // image width
-	const int   height   = 720;     // image height
+	const int   width    = 1600;     // image width
+	const int   height   = 800;     // image height
 	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
 
@@ -142,6 +142,9 @@ int main() {
     Cylinder chapeaux2 = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 0.95, 0), 0.7,Vec3f(0.3, 0.3, 0.3));
     Cylinder chapeaux3 = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 1.08, 0), 0.45,Vec3f(1.0, 0.0, 0.0));
 
+    // Cravate
+   // RoundedCone cravate = RoundedCone(Vec3f(0, -0.53, 1), Vec3f(0, -0.535, 1), 0.2, 0.3, Vec3f(1.0, 0.0, 0.0));
+
     
 
 
@@ -175,47 +178,17 @@ int main() {
     Cylinder bras28 = Cylinder( Vec3f(0.3,-0.57, 0.65), Vec3f(0.35,-0.7, 0.6), 0.02,Vec3f(0.5, 0.4, 0));
 
 
-   // Sphere boule1 = Sphere(Vec3f(0, 0.8, 0), sphere1_radius,0,couleur_noir);
+   // DemiSphere boule = DemiSphere(Vec3f(0, 0.8, 0), 0.9,0,couleur_noir);
 
 
     Model** models = new Model*[32] {
-        &boule1,
-        &boule2,
-        &boule3,
-        &bouton1,
-        &bouton2,
-        &bouton3,
-        &bouton4,
-        &bouton5,
-        &bouton6,
-        &bouton7,
-        &bouton8,
-        &bouton9,
+        &boule1,&boule2,&boule3,
+        &bouton1,&bouton2,&bouton3,&bouton4,&bouton5,&bouton6,&bouton7,&bouton8,&bouton9,
         &carotte,
-        &bras1,
-        &bras2,
-        &bras3,
-        &bras4,
-        &bras5,
-        &bras6,
-        &bras7,
-        &bras8,
-
-        &bras21,
-        &bras22,
-        &bras23,
-        &bras24,
-        &bras25,
-        &bras26,
-        &bras27,
-        &bras28,
-
-        &chapeaux,
-        &chapeaux2,
-        &chapeaux3,
-   
-
-       
+        &bras1,&bras2,&bras3,&bras4,&bras5,&bras6,&bras7,&bras8,
+        &bras21,&bras22,&bras23,&bras24,&bras25,&bras26,&bras27,&bras28,
+        &chapeaux,&chapeaux2,&chapeaux3,
+        //&cravate,
     };
 
     render(models);

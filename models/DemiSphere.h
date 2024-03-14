@@ -21,7 +21,13 @@ public:
     float signed_distance(const Vec3f &p) {
         float displacement = -fractal_brownian_motion(p * 3.4) * noise_amplitude;
         float distanceToCenter = (p - center).norm();
-        return distanceToCenter - (radius + displacement);
+        
+        // Vérifier si le point est en dessous du centre de la demi-sphère
+        if (p.y < center.y) {
+            return distanceToCenter - (radius + displacement); // Retourner une distance négative
+        } else {
+            return distanceToCenter - (radius + displacement); // Retourner une distance positive
+        }
     }
 
     Vec3f distance_field_normal(const Vec3f &hit) {
