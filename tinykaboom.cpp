@@ -147,13 +147,13 @@ int main() {
 
     Cylinder bras1 = Cylinder(Vec3f(0, 0, 0), Vec3f(-1.2, 0.45f, 0), 0.03, Vec3f(0.5, 0.4, 0));
     Cylinder bras2 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras3 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.2f, 0.2), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras3 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.25, 0.2f, 0.2), 0.03,Vec3f(0.5, 0.4, 0));
     Cylinder bras4 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.0f, 0), 0.03,Vec3f(0.5, 0.4, 0));
 
-    Cylinder bras21 = Cylinder(Vec3f(0, 0, 0), Vec3f(1.2, 0.45f, 0), 0.03, Vec3f(0.5, 0.4, 0));
-    Cylinder bras22 = Cylinder(Vec3f(1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras23 = Cylinder(Vec3f(1.2, 0.45f, 0), Vec3f(-1.35, 0.2f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras24 = Cylinder(Vec3f(1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras21 = Cylinder(Vec3f(0, 0, 0), Vec3f(1.3, 0.35f, 0), 0.03, Vec3f(0.5, 0.4, 0));
+    Cylinder bras22 = Cylinder(Vec3f(1.3, 0.35f, 0), Vec3f(1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras23 = Cylinder(Vec3f(1.3, 0.35f, 0), Vec3f(1.35, 0.2f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras24 = Cylinder(Vec3f(1.1, 0.25f, 0), Vec3f(1.05, 0.1f, 0.2), 0.03,Vec3f(0.5, 0.4, 0));
 
 
     Model** models = new Model*[23] {
