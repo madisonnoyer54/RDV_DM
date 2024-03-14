@@ -53,7 +53,7 @@ void render(Model** models) {
                 
                 //On teste la distance avec chaque modèle de la scène
                 //Et on colorie si il y a une collision
-                for(int l = 0; l < 15; l++) {
+                for(int l = 0; l < 23; l++) {
                     minDist = std::min(models[l]->signed_distance(pos), minDist);
                     if(minDist < 0){
                         framebuffer[i+j*width] = models[l]->getColor(pos, Vec3f(10, 10, 10));
@@ -92,16 +92,7 @@ void render(Model** models) {
         }
     }
     stbi_write_jpg("out.jpg", width, height, 3, pixmap.data(), 100);
-/*
-	std::ofstream ofs("./out.ppm", std::ios::binary); // save the framebuffer to file
-	ofs << "P6\n" << width << " " << height << "\n255\n";
-	for (size_t i = 0; i < height*width; ++i) {
-		for (size_t j = 0; j<3; j++) {
-		    ofs << (char)(std::max(0, std::min(255, static_cast<int>(255*framebuffer[i][j]))));
-		}
-	}
-	ofs.close();
-    */
+
 }
 
 int main() {
@@ -143,8 +134,12 @@ int main() {
 
     // Sur la boule du bas
     Bouton bouton4 = Bouton(Vec3f(0.0, -0.5, sphere3_radius));
+
+    // Chapeaux 
+    Cylinder chapeaux = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 1.3, 0), 0.42,Vec3f(0.3, 0.3, 0.3));
+    Cylinder chapeaux2 = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 0.95, 0), 0.7,Vec3f(0.3, 0.3, 0.3));
+
   
- 
 
 
     RoundedCone carotte = RoundedCone(Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.8), 0.01, 0.05, Vec3f(255.0 / 255.0, 165.0 / 255.0, 0.0 / 255.0));
@@ -152,8 +147,16 @@ int main() {
 
     Cylinder bras1 = Cylinder(Vec3f(0, 0, 0), Vec3f(-1.2, 0.45f, 0), 0.03, Vec3f(0.5, 0.4, 0));
     Cylinder bras2 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras3 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.2f, 0.2), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras4 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.0f, 0), 0.03,Vec3f(0.5, 0.4, 0));
 
-    Model** models = new Model*[15] {
+    Cylinder bras21 = Cylinder(Vec3f(0, 0, 0), Vec3f(1.2, 0.45f, 0), 0.03, Vec3f(0.5, 0.4, 0));
+    Cylinder bras22 = Cylinder(Vec3f(1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras23 = Cylinder(Vec3f(1.2, 0.45f, 0), Vec3f(-1.35, 0.2f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+    Cylinder bras24 = Cylinder(Vec3f(1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
+
+
+    Model** models = new Model*[23] {
         &boule1,
         &boule2,
         &boule3,
@@ -169,6 +172,15 @@ int main() {
         &carotte,
         &bras1,
         &bras2,
+        &bras3,
+        &bras4,
+        &bras21,
+        &bras22,
+        &bras23,
+        &bras24,
+        &chapeaux,
+        &chapeaux2,
+       
     };
 
     render(models);
