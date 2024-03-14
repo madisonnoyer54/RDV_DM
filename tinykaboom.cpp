@@ -13,9 +13,9 @@
 
 #include "geometry.h"
 #include "models/Sphere.h"
+#include "models/DemiSphere.h"
 #include "models/RoundedCone.h"
 #include "models/Cylinder.h"
-#include "models/Bouton.h"
 
 int envmap_width, envmap_height;
 std::vector<Vec3f> envmap;
@@ -23,6 +23,8 @@ std::vector<Vec3f> envmap;
 const float sphere1_radius   = 0.5; // Rayon pour la petite boule
 const float sphere2_radius  = 0.6; // Rayon pour la boule moyenne
 const float sphere3_radius   = 0.7; // Rayon pour la grande boule
+
+Vec3f couleur_noir = Vec3f(0, 0, 0);
 
 
 
@@ -53,7 +55,7 @@ void render(Model** models) {
                 
                 //On teste la distance avec chaque modèle de la scène
                 //Et on colorie si il y a une collision
-                for(int l = 0; l < 31; l++) {
+                for(int l = 0; l < 32; l++) {
                     minDist = std::min(models[l]->signed_distance(pos), minDist);
                     if(minDist < 0){
                         framebuffer[i+j*width] = models[l]->getColor(pos, Vec3f(10, 10, 10));
@@ -113,33 +115,34 @@ int main() {
     stbi_image_free(pixmap);
 
     //Initialisation des objets
-    Sphere boule1 = Sphere(Vec3f(0, 0.8, 0), sphere1_radius);
-    Sphere boule2 = Sphere(Vec3f(0, 0, 0), sphere2_radius);
-    Sphere boule3 = Sphere(Vec3f(0, -0.8, 0), sphere3_radius);
+    Sphere boule1 = Sphere(Vec3f(0, 0.8, 0), sphere1_radius,0.15,Vec3f(1.0,1.0,1.0));
+    Sphere boule2 = Sphere(Vec3f(0, 0, 0), sphere2_radius,0.15,Vec3f(1,1,1));
+    Sphere boule3 = Sphere(Vec3f(0, -0.8, 0), sphere3_radius,0.15,Vec3f(1,1,1));
 
 
     // Sur la boule du cranne
     // Bouche
-    Bouton bouton2 = Bouton(Vec3f(0.0, 0.515, sphere1_radius));
-    Bouton bouton6 = Bouton(Vec3f(-0.07, 0.53, sphere1_radius));
-    Bouton bouton7 = Bouton(Vec3f(0.07, 0.53, sphere1_radius));
-    Bouton bouton8 = Bouton(Vec3f(-0.14, 0.55, sphere1_radius));
-    Bouton bouton9 = Bouton(Vec3f(0.14, 0.55, sphere1_radius));
+    Sphere bouton2 = Sphere(Vec3f(0.0, 0.515,sphere1_radius), 0.02,0,couleur_noir);
+    Sphere bouton6 = Sphere(Vec3f(-0.07, 0.53,sphere1_radius), 0.02,0,couleur_noir);
+    Sphere bouton7 = Sphere(Vec3f(0.07, 0.53,sphere1_radius), 0.02,0,couleur_noir);
+    Sphere bouton8 = Sphere(Vec3f(-0.14, 0.55,sphere1_radius), 0.02,0,couleur_noir);
+    Sphere bouton9 = Sphere(Vec3f(0.14, 0.55,sphere1_radius), 0.02,0,couleur_noir);
     // Yeux
-    Bouton bouton3 = Bouton(Vec3f(0.15, 0.75, sphere1_radius));
-    Bouton bouton5 = Bouton(Vec3f(-0.15, 0.75, sphere1_radius));
+    Sphere bouton3 = Sphere(Vec3f(0.15, 0.75,sphere1_radius), 0.02,0,couleur_noir);
+    Sphere bouton5 = Sphere(Vec3f(-0.15, 0.75,sphere1_radius), 0.02,0,couleur_noir);
 
     // Sur la boule du millieu
-    Bouton bouton1 = Bouton(Vec3f(0.0, 0.0, sphere2_radius));
+    Sphere bouton1 = Sphere(Vec3f(0.0, 0.0,sphere2_radius), 0.02,0,couleur_noir);
 
     // Sur la boule du bas
-    Bouton bouton4 = Bouton(Vec3f(0.0, -0.5, sphere3_radius));
+    Sphere bouton4 = Sphere(Vec3f(0.0, -0.5,sphere3_radius), 0.02,0,couleur_noir);
 
     // Chapeaux 
     Cylinder chapeaux = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 1.3, 0), 0.42,Vec3f(0.3, 0.3, 0.3));
     Cylinder chapeaux2 = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 0.95, 0), 0.7,Vec3f(0.3, 0.3, 0.3));
+    Cylinder chapeaux3 = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 1.08, 0), 0.45,Vec3f(1.0, 0.0, 0.0));
 
-  
+    
 
 
     RoundedCone carotte = RoundedCone(Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.8), 0.01, 0.05, Vec3f(255.0 / 255.0, 165.0 / 255.0, 0.0 / 255.0));
@@ -172,9 +175,10 @@ int main() {
     Cylinder bras28 = Cylinder( Vec3f(0.3,-0.57, 0.65), Vec3f(0.35,-0.7, 0.6), 0.02,Vec3f(0.5, 0.4, 0));
 
 
+   // Sphere boule1 = Sphere(Vec3f(0, 0.8, 0), sphere1_radius,0,couleur_noir);
 
 
-    Model** models = new Model*[31] {
+    Model** models = new Model*[32] {
         &boule1,
         &boule2,
         &boule3,
@@ -208,6 +212,9 @@ int main() {
 
         &chapeaux,
         &chapeaux2,
+        &chapeaux3,
+   
+
        
     };
 

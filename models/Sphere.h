@@ -9,11 +9,14 @@ class Sphere : public Model{
     public:
         Vec3f center;
         float radius;
-        float noise_amplitude = 0.15;
+        float noise_amplitude;
+        Vec3f couleur;
 
-        Sphere(Vec3f _center, float _radius){
+        Sphere(Vec3f _center, float _radius, float _noise_amplitude, Vec3f _couleur){
             center = _center;
             radius = _radius;
+            couleur = _couleur;
+            noise_amplitude = _noise_amplitude;
         }
 
         float signed_distance(const Vec3f &p){
@@ -43,12 +46,12 @@ class Sphere : public Model{
         
             float x = std::max(0.f, std::min(1.f, d));
             if (x<.25f)
-                return lerp(blanc, blanc, x*4.f);
+                return lerp(couleur, couleur, x*4.f);
             else if (x<.5f)
-                return lerp(blanc, blanc, x*4.f-1.f);
+                return lerp(couleur, couleur, x*4.f-1.f);
             else if (x<.75f)
-                return lerp(blanc, blanc, x*4.f-2.f);
-            return lerp(blanc, blanc, x*4.f-3.f);
+                return lerp(couleur, couleur, x*4.f-2.f);
+            return lerp(couleur, couleur, x*4.f-3.f);
         }
         
 };
