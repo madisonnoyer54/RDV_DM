@@ -16,6 +16,7 @@
 #include "models/DemiSphere.h"
 #include "models/RoundedCone.h"
 #include "models/Cylinder.h"
+#include "models/CappedCone.h"
 
 int envmap_width, envmap_height;
 std::vector<Vec3f> envmap;
@@ -29,8 +30,10 @@ Vec3f couleur_noir = Vec3f(0, 0, 0);
 
 
 void render(Model** models) {
-	const int   width    = 1600;     // image width
-	const int   height   = 800;     // image height
+	//const int   width    = 1600;     // image width
+	//const int   height   = 800;     // image height
+    const int   width    = 600;     // image width
+	const int   height   = 600;     // image height
 	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
 
@@ -55,7 +58,7 @@ void render(Model** models) {
                 
                 //On teste la distance avec chaque modèle de la scène
                 //Et on colorie si il y a une collision
-                for(int l = 0; l < 32; l++) {
+                for(int l = 0; l < 37; l++) {
                     minDist = std::min(models[l]->signed_distance(pos), minDist);
                     if(minDist < 0){
                         framebuffer[i+j*width] = models[l]->getColor(pos, Vec3f(10, 10, 10));
@@ -143,7 +146,14 @@ int main() {
     Cylinder chapeaux3 = Cylinder(Vec3f(0, 0.9, 0), Vec3f(0, 1.08, 0), 0.45,Vec3f(1.0, 0.0, 0.0));
 
     // Cravate
-   // RoundedCone cravate = RoundedCone(Vec3f(0, -0.53, 1), Vec3f(0, -0.535, 1), 0.2, 0.3, Vec3f(1.0, 0.0, 0.0));
+    // bas , haut , radus bas, radus haut 
+   // CappedCone cravate2 = CappedCone(Vec3f(0, 0.37, 0), Vec3f(0, 0.45, 0.0), 0.39, 0.29, Vec3f(1.0, 0.0, 0.0)); // le col
+
+    CappedCone cravate = CappedCone(Vec3f(0, 0.38, 0.30), Vec3f(0, 0.34,0.36), 0.10, 0.05, Vec3f(0.3, 0.3, 0.3));
+    CappedCone cravate1 = CappedCone(Vec3f(0, 0.34,0.36), Vec3f(0, 0.13,0.48), 0.04, 0.04, Vec3f(0.3, 0.3, 0.3));
+    CappedCone cravate3 = CappedCone(Vec3f(0, 0.15,0.48), Vec3f(0, 0.04,0.52), 0.04, 0.01, Vec3f(0.3, 0.3, 0.3));
+
+
 
     
 
@@ -169,26 +179,30 @@ int main() {
     Cylinder bras21 = Cylinder(Vec3f(0.35, 0.3, 0), Vec3f(0.9, -0.40,-0.3), 0.03, Vec3f(0.5, 0.4, 0));
     Cylinder bras22 = Cylinder(Vec3f(0.9, -0.40,-0.3), Vec3f(0.4,-0.51, 0.615), 0.03,Vec3f(0.5, 0.4, 0));
     // Doigt
-    Cylinder bras23 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.45,-0.6, 0.55), 0.02,Vec3f(0.5, 0.4, 0)); // VERT
-    Cylinder bras24 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.47,-0.65, 0.6), 0.02,Vec3f(0.5, 0.4, 0)); // bleu
+    Cylinder bras23 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.45,-0.6, 0.6), 0.02,Vec3f(0.5, 0.4, 0)); // VERT
+    Cylinder bras24 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.37,-0.65, 0.7), 0.02,Vec3f(0.5, 0.4, 0)); // bleu
     Cylinder bras25 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.3,-0.57, 0.65), 0.02,Vec3f(0.5, 0.4, 0));
     // bout doigt
-    Cylinder bras26 = Cylinder(Vec3f(0.45,-0.6, 0.55), Vec3f(0.4,-0.65, 0.6), 0.02,Vec3f(0.5, 0.4, 0));//
-    Cylinder bras27 = Cylinder( Vec3f(0.47,-0.65, 0.6), Vec3f(0.4,-0.75, 0.65), 0.02,Vec3f(0.5, 0.4, 0));
-    Cylinder bras28 = Cylinder( Vec3f(0.3,-0.57, 0.65), Vec3f(0.35,-0.7, 0.6), 0.02,Vec3f(0.5, 0.4, 0));
+    Cylinder bras26 = Cylinder(Vec3f(0.45,-0.6, 0.6), Vec3f(0.30,-0.65, 0.60), 0.02,Vec3f(0.5, 0.4, 0));//
+    Cylinder bras27 = Cylinder( Vec3f(0.37,-0.65, 0.7), Vec3f(0.25,-0.65, 0.7), 0.02,Vec3f(0.5, 0.4, 0));
+    Cylinder bras28 = Cylinder( Vec3f(0.3,-0.57, 0.65), Vec3f(0.25,-0.6, 0.5), 0.02,Vec3f(0.5, 0.4, 0));
+
+    CappedCone cone = CappedCone(Vec3f(0.3, -0.7,0.6), Vec3f(0.3, -0.4,0.6), 0.01, 0.07, Vec3f(0.8, 0.5, 0.2));
+    Sphere glace = Sphere(Vec3f(0.3, -0.4,0.6), 0.14,0.16,Vec3f(1.0, 0.5, 0.8));
 
 
    // DemiSphere boule = DemiSphere(Vec3f(0, 0.8, 0), 0.9,0,couleur_noir);
 
 
-    Model** models = new Model*[32] {
+    Model** models = new Model*[37] {
         &boule1,&boule2,&boule3,
         &bouton1,&bouton2,&bouton3,&bouton4,&bouton5,&bouton6,&bouton7,&bouton8,&bouton9,
         &carotte,
         &bras1,&bras2,&bras3,&bras4,&bras5,&bras6,&bras7,&bras8,
         &bras21,&bras22,&bras23,&bras24,&bras25,&bras26,&bras27,&bras28,
         &chapeaux,&chapeaux2,&chapeaux3,
-        //&cravate,
+        &cravate,&cravate1,&cravate3,
+        &cone,&glace
     };
 
     render(models);
