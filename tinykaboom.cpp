@@ -30,10 +30,10 @@ Vec3f couleur_noir = Vec3f(0, 0, 0);
 
 
 void render(Model** models) {
-	//const int   width    = 1600;     // image width
-	//const int   height   = 800;     // image height
-    const int   width    = 600;     // image width
-	const int   height   = 600;     // image height
+	const int   width    = 1600;     // image width
+	const int   height   = 800;     // image height
+  //  const int   width    = 600;     // image width
+//	const int   height   = 600;     // image height
 	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
 
