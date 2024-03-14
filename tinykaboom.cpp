@@ -53,7 +53,7 @@ void render(Model** models) {
                 
                 //On teste la distance avec chaque modèle de la scène
                 //Et on colorie si il y a une collision
-                for(int l = 0; l < 23; l++) {
+                for(int l = 0; l < 31; l++) {
                     minDist = std::min(models[l]->signed_distance(pos), minDist);
                     if(minDist < 0){
                         framebuffer[i+j*width] = models[l]->getColor(pos, Vec3f(10, 10, 10));
@@ -120,11 +120,11 @@ int main() {
 
     // Sur la boule du cranne
     // Bouche
-    Bouton bouton2 = Bouton(Vec3f(0.0, 0.5, sphere1_radius));
-    Bouton bouton6 = Bouton(Vec3f(-0.07, 0.55, sphere1_radius));
-    Bouton bouton7 = Bouton(Vec3f(0.07, 0.55, sphere1_radius));
-    Bouton bouton8 = Bouton(Vec3f(-0.14, 0.6, sphere1_radius));
-    Bouton bouton9 = Bouton(Vec3f(0.14, 0.6, sphere1_radius));
+    Bouton bouton2 = Bouton(Vec3f(0.0, 0.515, sphere1_radius));
+    Bouton bouton6 = Bouton(Vec3f(-0.07, 0.53, sphere1_radius));
+    Bouton bouton7 = Bouton(Vec3f(0.07, 0.53, sphere1_radius));
+    Bouton bouton8 = Bouton(Vec3f(-0.14, 0.55, sphere1_radius));
+    Bouton bouton9 = Bouton(Vec3f(0.14, 0.55, sphere1_radius));
     // Yeux
     Bouton bouton3 = Bouton(Vec3f(0.15, 0.75, sphere1_radius));
     Bouton bouton5 = Bouton(Vec3f(-0.15, 0.75, sphere1_radius));
@@ -143,20 +143,38 @@ int main() {
 
 
     RoundedCone carotte = RoundedCone(Vec3f(0, 0.7, 0.4), Vec3f(0, 0.7, 0.8), 0.01, 0.05, Vec3f(255.0 / 255.0, 165.0 / 255.0, 0.0 / 255.0));
+    // x, y ,z
+    // Point de base du cylindre , Point de sommet du cylindre, Rayon du cylindre, Couleur du cylindre
+    Cylinder bras1 = Cylinder(Vec3f(-0.35, 0.3, 0), Vec3f(-0.9, -0.40,-0.3), 0.03, Vec3f(0.5, 0.4, 0));
+    Cylinder bras2 = Cylinder(Vec3f(-0.9, -0.40,-0.3), Vec3f(-0.5,-0.61, 0.615), 0.03,Vec3f(0.5, 0.4, 0));
+    // Doigt
+    Cylinder bras3 = Cylinder(Vec3f(-0.5,-0.6, 0.6), Vec3f(-0.55,-0.7, 0.55), 0.02,Vec3f(0.5, 0.4, 0)); // VERT
+    Cylinder bras4 = Cylinder(Vec3f(-0.5,-0.6, 0.6), Vec3f(-0.5,-0.75, 0.6), 0.02,Vec3f(0.5, 0.4, 0)); // rouge
+    Cylinder bras5 = Cylinder(Vec3f(-0.5,-0.6, 0.6), Vec3f(-0.55,-0.77, 0.6), 0.02,Vec3f(0.5, 0.4, 0));
+    // bout doigt
+    Cylinder bras6 = Cylinder(Vec3f(-0.55,-0.7, 0.55), Vec3f(-0.5,-0.85, 0.55), 0.02,Vec3f(0.5, 0.4, 0));
+    Cylinder bras7 = Cylinder( Vec3f(-0.5,-0.75, 0.6), Vec3f(-0.5,-0.85, 0.55), 0.02,Vec3f(0.5, 0.4, 0));
+    Cylinder bras8 = Cylinder( Vec3f(-0.55,-0.77, 0.6), Vec3f(-0.55,-0.87, 0.6), 0.02,Vec3f(0.5, 0.4, 0));
 
 
-    Cylinder bras1 = Cylinder(Vec3f(0, 0, 0), Vec3f(-1.2, 0.45f, 0), 0.03, Vec3f(0.5, 0.4, 0));
-    Cylinder bras2 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras3 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.25, 0.2f, 0.2), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras4 = Cylinder(Vec3f(-1.2, 0.45f, 0), Vec3f(-1.35, 0.0f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-
-    Cylinder bras21 = Cylinder(Vec3f(0, 0, 0), Vec3f(1.3, 0.35f, 0), 0.03, Vec3f(0.5, 0.4, 0));
-    Cylinder bras22 = Cylinder(Vec3f(1.3, 0.35f, 0), Vec3f(1.35, 0.6f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras23 = Cylinder(Vec3f(1.3, 0.35f, 0), Vec3f(1.35, 0.2f, 0), 0.03,Vec3f(0.5, 0.4, 0));
-    Cylinder bras24 = Cylinder(Vec3f(1.1, 0.25f, 0), Vec3f(1.05, 0.1f, 0.2), 0.03,Vec3f(0.5, 0.4, 0));
 
 
-    Model** models = new Model*[23] {
+    // Point de base du cylindre , Point de sommet du cylindre, Rayon du cylindre, Couleur du cylindre
+    Cylinder bras21 = Cylinder(Vec3f(0.35, 0.3, 0), Vec3f(0.9, -0.40,-0.3), 0.03, Vec3f(0.5, 0.4, 0));
+    Cylinder bras22 = Cylinder(Vec3f(0.9, -0.40,-0.3), Vec3f(0.4,-0.51, 0.615), 0.03,Vec3f(0.5, 0.4, 0));
+    // Doigt
+    Cylinder bras23 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.45,-0.6, 0.55), 0.02,Vec3f(0.5, 0.4, 0)); // VERT
+    Cylinder bras24 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.47,-0.65, 0.6), 0.02,Vec3f(0.5, 0.4, 0)); // bleu
+    Cylinder bras25 = Cylinder(Vec3f(0.4,-0.5, 0.6), Vec3f(0.3,-0.57, 0.65), 0.02,Vec3f(0.5, 0.4, 0));
+    // bout doigt
+    Cylinder bras26 = Cylinder(Vec3f(0.45,-0.6, 0.55), Vec3f(0.4,-0.65, 0.6), 0.02,Vec3f(0.5, 0.4, 0));//
+    Cylinder bras27 = Cylinder( Vec3f(0.47,-0.65, 0.6), Vec3f(0.4,-0.75, 0.65), 0.02,Vec3f(0.5, 0.4, 0));
+    Cylinder bras28 = Cylinder( Vec3f(0.3,-0.57, 0.65), Vec3f(0.35,-0.7, 0.6), 0.02,Vec3f(0.5, 0.4, 0));
+
+
+
+
+    Model** models = new Model*[31] {
         &boule1,
         &boule2,
         &boule3,
@@ -174,10 +192,20 @@ int main() {
         &bras2,
         &bras3,
         &bras4,
+        &bras5,
+        &bras6,
+        &bras7,
+        &bras8,
+
         &bras21,
         &bras22,
         &bras23,
         &bras24,
+        &bras25,
+        &bras26,
+        &bras27,
+        &bras28,
+
         &chapeaux,
         &chapeaux2,
        
