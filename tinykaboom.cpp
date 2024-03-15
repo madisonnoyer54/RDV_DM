@@ -149,9 +149,9 @@ int main() {
     // bas , haut , radus bas, radus haut 
    // CappedCone cravate2 = CappedCone(Vec3f(0, 0.37, 0), Vec3f(0, 0.45, 0.0), 0.39, 0.29, Vec3f(1.0, 0.0, 0.0)); // le col
 
-    CappedCone cravate = CappedCone(Vec3f(0, 0.38, 0.30), Vec3f(0, 0.34,0.36), 0.10, 0.05, Vec3f(0.3, 0.3, 0.3));
-    CappedCone cravate1 = CappedCone(Vec3f(0, 0.34,0.36), Vec3f(0, 0.13,0.48), 0.04, 0.04, Vec3f(0.3, 0.3, 0.3));
-    CappedCone cravate3 = CappedCone(Vec3f(0, 0.15,0.48), Vec3f(0, 0.04,0.52), 0.04, 0.01, Vec3f(0.3, 0.3, 0.3));
+    CappedCone cravate = CappedCone(Vec3f(0, 0.38, 0.30), Vec3f(0, 0.34,0.36), 0.10, 0.05, Vec3f(0.7, 0.1, 0.1));
+    CappedCone cravate1 = CappedCone(Vec3f(0, 0.34,0.36), Vec3f(0, 0.13,0.48), 0.04, 0.04, Vec3f(0.7, 0.1, 0.1));
+    CappedCone cravate3 = CappedCone(Vec3f(0, 0.15,0.48), Vec3f(0, 0.04,0.52), 0.04, 0.01, Vec3f(0.7, 0.1, 0.1));
 
 
 
