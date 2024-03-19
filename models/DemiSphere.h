@@ -23,7 +23,7 @@ public:
         float distanceToCenter = (p - center).norm();
         
         // Vérifier si le point est en dessous du centre de la demi-sphère
-        if (p.y < center.y) {
+        if (p.x < center.x) {
             return distanceToCenter - (radius + displacement); // Retourner une distance négative
         } else {
             return distanceToCenter - (radius + displacement); // Retourner une distance positive

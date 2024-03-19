@@ -9,7 +9,13 @@ public:
     Vec3f a, b, color;
     float ra, rb;
     
-    CappedCone(Vec3f _a, Vec3f _b, float _ra, float _rb, Vec3f _color) : a(_a), b(_b), ra(_ra), rb(_rb), color(_color) {}
+    CappedCone(Vec3f _a, Vec3f _b, float _ra, float _rb, Vec3f _color){
+        a = _a;
+        b = _b;
+        ra = _ra;
+        rb = _rb;
+        color = _color;
+    }
 
     float sdCappedCone(const Vec3f &p) {
         float rba  = rb - ra;
