@@ -13,7 +13,6 @@
 
 #include "geometry.h"
 #include "models/Sphere.h"
-#include "models/DemiSphere.h"
 #include "models/RoundedCone.h"
 #include "models/Cylinder.h"
 #include "models/CappedCone.h"
