@@ -33,9 +33,11 @@ class RoundedCone : public Model
             float z2 = z*z*l2;
 
             float k = sign(rr)*rr*rr*x2;
-            if( sign(z)*a2*z2 > k ) return  sqrt(x2 + z2)        *il2 - r2;
-            if( sign(y)*a2*y2 < k ) return  sqrt(x2 + y2)        *il2 - r1;
-                                    return (sqrt(x2*a2*il2)+y*rr)*il2 - r1;
+            if( sign(z)*a2*z2 > k ) 
+                return  sqrt(x2 + z2)*il2 - r2;
+            if( sign(y)*a2*y2 < k )
+                return  sqrt(x2 + y2)*il2 - r1;
+            return (sqrt(x2*a2*il2)+y*rr)*il2 - r1;
         }
 
         Vec3f distance_field_normal(const Vec3f &hit) {

@@ -31,9 +31,9 @@ Vec3f couleur_noir = Vec3f(0, 0, 0);
 
 void render(Model** models) {
 	const int   width    = 1600;     // image width
-	const int   height   = 800;     // image height
-  //  const int   width    = 600;     // image width
-//	const int   height   = 600;     // image height
+    	const int   height   = 800;     // image height
+   // const int   width    = 600;     // image width
+//const int   height   = 600;     // image height
 	const float fov      = M_PI/3.; // field of view angle
 	std::vector<Vec3f> framebuffer(width*height);
 
@@ -187,6 +187,8 @@ int main() {
     Cylinder bras27 = Cylinder( Vec3f(0.37,-0.65, 0.7), Vec3f(0.25,-0.65, 0.7), 0.02,Vec3f(0.5, 0.4, 0));
     Cylinder bras28 = Cylinder( Vec3f(0.3,-0.57, 0.65), Vec3f(0.25,-0.6, 0.5), 0.02,Vec3f(0.5, 0.4, 0));
 
+
+
     CappedCone cone = CappedCone(Vec3f(0.3, -0.7,0.6), Vec3f(0.3, -0.4,0.6), 0.01, 0.07, Vec3f(0.8, 0.5, 0.2));
     Sphere glace = Sphere(Vec3f(0.3, -0.4,0.6), 0.14,0.16,Vec3f(1.0, 0.5, 0.8));
 
@@ -202,7 +204,8 @@ int main() {
         &bras21,&bras22,&bras23,&bras24,&bras25,&bras26,&bras27,&bras28,
         &chapeaux,&chapeaux2,&chapeaux3,
         &cravate,&cravate1,&cravate3,
-        &cone,&glace
+        &cone,&glace,
+    
     };
 
     render(models);
