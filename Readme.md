@@ -3,8 +3,8 @@ Ce dépôt est un projet réalisé dans le cadre de notre programme de master en
 
 ## auteurs
 
-NOYER Madison
-FAEDO Théo
+- NOYER Madison
+- FAEDO Théo
 
 
 ## compilation
