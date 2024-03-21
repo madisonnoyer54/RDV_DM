@@ -1,13 +1,13 @@
 # Bonhomme de Neige !! 
 Ce dépôt est un projet réalisé dans le cadre de notre programme de master en informatique.
 
-## auteurs
+## Auteurs
 
 - NOYER Madison
 - FAEDO Théo
 
 
-## compilation
+## Compilation
 ```sh
 git clone https://github.com/madisonnoyer54/RDV_DM.git
 cd RDV_DM
