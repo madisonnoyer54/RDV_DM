@@ -1,5 +1,7 @@
-# Bonhomme de Neige !! 
-Ce dépôt est un projet réalisé dans le cadre de notre programme de master en informatique.
+# Bonhomme de Neige 
+
+# Description
+Ce dépôt est un projet réalisé dans le cadre de notre programme de master en informatique, dans le cadre du cours de Représentation des Données Visuelles (RDV). Nous devions réaliser un bonhomme de neige en 3D.
 
 ## Auteurs
 
